@@ -32,7 +32,7 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
-resource "aws_internet_gateway" "gw" {
+resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags={
@@ -46,7 +46,7 @@ resource "aws_route_table" "second_rt" {
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.gw.id
+    gateway_id = aws_internet_gateway.main.id
   }
 
   tags = {
