@@ -8,7 +8,7 @@ variable "subnet_public_cidrs" {
 variable "subnet_private_cidrs" {
   type=string
   description = "Private Subnet CIDR values"
-  default =  "10.0.0.0/16" 
+  default =  "10.0.1.0/16" 
 
   
 }
