@@ -11,7 +11,7 @@ resource "aws_vpc" "main" {
   }
 }
 
-resource "aws_subnet" "public_subnets" {
+resource "aws_subnet" "public_subnet" {
   
   vpc_id = aws_vpc.main.id
   cidr_block = var.subnet_public_cidrs
@@ -22,7 +22,7 @@ resource "aws_subnet" "public_subnets" {
   }
 }
 
-resource "aws_subnet" "private_subnets" {
+resource "aws_subnet" "private_subnet" {
   
   vpc_id = aws_vpc.main.id
   cidr_block = var.subnet_private_cidrs
