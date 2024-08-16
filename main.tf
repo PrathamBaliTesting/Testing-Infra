@@ -93,18 +93,18 @@ resource "aws_security_group" "http_access" {
 }
 
 resource "aws_eip" "eip" {
-  vpc = "true"
+  vpc = true
   
 }
 
-resource "NAT_gateway" "ngw" {
+resource "aws_nat_gateway" "ngw" {
     allocation_id=aws_eip.eip.id
-    subnet_id=aws_subnet.subnet_public_cidrs
+    subnet_id=aws_subnet.public_subnet.id
 
     tags = {
       Name= "nat_gateway_bali"
     }
 
-    depends_on = [ aws_internet_gateway.main.id ]
+    depends_on = [ aws_internet_gateway.main ]
   
 }
