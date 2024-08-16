@@ -2,7 +2,7 @@ provider "aws" {
   region=var.region
   
 }
-
+#Generating of VPC
 resource "aws_vpc" "main" {
   cidr_block = var.vpc_cidr
   
@@ -11,6 +11,7 @@ resource "aws_vpc" "main" {
   }
 }
 
+#Generating of a Public Subnet
 resource "aws_subnet" "public_subnet" {
   
   vpc_id = aws_vpc.main.id
@@ -22,6 +23,7 @@ resource "aws_subnet" "public_subnet" {
   }
 }
 
+#Generating of Private Subnet
 resource "aws_subnet" "private_subnet" {
   
   vpc_id = aws_vpc.main.id
@@ -32,7 +34,7 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
-
+#Generating of Route Table
 resource "aws_route_table" "second_rt" {
   vpc_id = aws_vpc.main.id
 
@@ -47,6 +49,7 @@ resource "aws_route_table" "second_rt" {
   
 }
 
+#Association of Route Table with Public Subnet 
 resource "aws_route_table_association" "public_subnets_asso" {
   
   subnet_id = aws_subnet.public_subnet.id
@@ -54,6 +57,7 @@ resource "aws_route_table_association" "public_subnets_asso" {
   
 }
 
+#Generating Internet Gateway
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
@@ -63,6 +67,7 @@ resource "aws_internet_gateway" "main" {
   
 }
 
+#Generating Elastic IP
 resource "aws_eip" "eip" {
   domain = "vpc"
 
@@ -72,7 +77,7 @@ resource "aws_eip" "eip" {
   
 }
 
-
+#Allocation of NAT Gateway
 resource "aws_nat_gateway" "ngw" {
     allocation_id=aws_eip.eip.id
     subnet_id=aws_subnet.public_subnet.id
@@ -85,6 +90,7 @@ resource "aws_nat_gateway" "ngw" {
   
 }
 
+#Generating of Network ACLs
 resource "aws_network_acl" "nacls" {
   vpc_id = aws_vpc.main.id
 
@@ -94,17 +100,20 @@ resource "aws_network_acl" "nacls" {
   
 }
 
+#Allocation of NACLs with Public Subnet ID
 resource "aws_network_acl_association" "nacls_asso" {
   network_acl_id = aws_network_acl.nacls.id
   subnet_id = aws_subnet.public_subnet.id  
   
 }
 
+#Generating of SSH and HTTP Secuirty Group
 resource "aws_security_group" "http_access" {
   vpc_id = aws_vpc.main.id
   name   = "http_access"
   description = "SG module "
 
+  #This is For SSH
   ingress {
     description = "Allow SSH"
     from_port   = 22
@@ -113,6 +122,7 @@ resource "aws_security_group" "http_access" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  #This is For Http
   ingress {
     description = "Http Acess"
     from_port = 80
