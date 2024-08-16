@@ -32,14 +32,6 @@ resource "aws_subnet" "private_subnet" {
   }
 }
 
-resource "aws_internet_gateway" "main" {
-  vpc_id = aws_vpc.main.id
-
-  tags={
-    Name="my_vpc_IG"
-  }
-  
-}
 
 resource "aws_route_table" "second_rt" {
   vpc_id = aws_vpc.main.id
@@ -59,6 +51,52 @@ resource "aws_route_table_association" "public_subnets_asso" {
   
   subnet_id = aws_subnet.public_subnet.id
   route_table_id = aws_route_table.second_rt.id
+  
+}
+
+resource "aws_internet_gateway" "main" {
+  vpc_id = aws_vpc.main.id
+
+  tags={
+    Name="my_vpc_IG"
+  }
+  
+}
+
+resource "aws_eip" "eip" {
+  domain = "vpc"
+
+  tags = {
+    Name = "Bali_elastic"
+  }
+  
+}
+
+
+resource "aws_nat_gateway" "ngw" {
+    allocation_id=aws_eip.eip.id
+    subnet_id=aws_subnet.public_subnet.id
+
+    tags = {
+      Name= "nat_gateway_bali"
+    }
+
+    depends_on = [ aws_internet_gateway.main ]
+  
+}
+
+resource "aws_network_acl" "nacls" {
+  vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "Bali_NACLs"
+  }
+  
+}
+
+resource "aws_network_acl_association" "nacls_asso" {
+  network_acl_id = aws_network_acl.nacls.id
+  subnet_id = aws_subnet.public_subnet.id  
   
 }
 
@@ -92,19 +130,4 @@ resource "aws_security_group" "http_access" {
 
 }
 
-resource "aws_eip" "eip" {
-  domain = "vpc"
-  
-}
 
-resource "aws_nat_gateway" "ngw" {
-    allocation_id=aws_eip.eip.id
-    subnet_id=aws_subnet.public_subnet.id
-
-    tags = {
-      Name= "nat_gateway_bali"
-    }
-
-    depends_on = [ aws_internet_gateway.main ]
-  
-}

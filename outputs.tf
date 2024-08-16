@@ -23,5 +23,19 @@ output "security_group_id" {
   value       = aws_security_group.http_access.id
 }
 
+output "nat_gateway_id" {
+  description = "The ID of Nat Gateway"
+  value = aws_nat_gateway.ngw.id
+}
 
+output "eip_id" {
+  description = "ID of Elastic IP"
+  value = aws_eip.eip.id
+  
+}
 
+output "network_acl_id" {
+  description = "ID of Netwrok ACL"
+  value = aws_network_acl.nacls.id
+  
+}
