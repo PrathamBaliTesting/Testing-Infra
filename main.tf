@@ -111,7 +111,7 @@ resource "aws_network_acl_association" "nacls_asso" {
 resource "aws_security_group" "http_access" {
   vpc_id = aws_vpc.main.id
   name   = "http_access"
-  description = "SG module "
+  description = "Secuirty Groups Modules"
 
   #This is For SSH
   ingress {
