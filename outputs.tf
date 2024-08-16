@@ -18,3 +18,10 @@ output "internet_gateway_id" {
   value       = aws_internet_gateway.main.id
 }
 
+output "security_group_id" {
+  description = "The ID of the allow SSH security group"
+  value       = aws_security_group.http_access.id
+}
+
+
+
