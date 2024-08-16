@@ -93,7 +93,7 @@ resource "aws_security_group" "http_access" {
 }
 
 resource "aws_eip" "eip" {
-  vpc = true
+  domain = "vpc"
   
 }
 
