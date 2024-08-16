@@ -91,3 +91,20 @@ resource "aws_security_group" "http_access" {
   }
 
 }
+
+resource "aws_eip" "eip" {
+  vpc = "true"
+  
+}
+
+resource "NAT_gateway" "ngw" {
+    allocation_id=aws_eip.eip.id
+    subnet_id=aws_subnet.subnet_public_cidrs
+
+    tags = {
+      Name= "nat_gateway_bali"
+    }
+
+    depends_on = [ aws_internet_gateway.main.id ]
+  
+}
