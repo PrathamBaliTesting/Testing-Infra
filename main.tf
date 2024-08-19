@@ -35,7 +35,7 @@ resource "aws_subnet" "private_subnet" {
 }
 
 #Generating of Route Table
-resource "aws_route_table" "second_rt" {
+resource "aws_route_table" "public_rt" {
   vpc_id = aws_vpc.main.id
 
   route {
@@ -53,10 +53,31 @@ resource "aws_route_table" "second_rt" {
 resource "aws_route_table_association" "public_subnets_asso" {
   
   subnet_id = aws_subnet.public_subnet.id
-  route_table_id = aws_route_table.second_rt.id
+  route_table_id = aws_route_table.public_rt.id
   
 }
 
+resource "aws_route_table" "private_rt" {
+  vpc_id = aws_vpc.main.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.main.id
+  }
+
+  tags = {
+    Name = "Public Route Table"
+  }
+  
+}
+
+#Association of Route Table with Public Subnet 
+resource "aws_route_table_association" "private_subnets_asso" {
+  
+  subnet_id = aws_subnet.private_subnet.id
+  route_table_id = aws_route_table.private_rt.id
+  
+}
 #Generating Internet Gateway
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
@@ -119,7 +140,7 @@ resource "aws_security_group" "http_access" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["10.0.0.0/16"]
   }
 
   #This is For Http
