@@ -131,11 +131,7 @@ resource "aws_network_acl_association" "nacls_asso" {
   
 }
 
-#Allocation of NACLs with private Subnet ID
-resource "aws_network_acl_association" "nacls_asso" {
-  network_acl_id = aws_network_acl.nacls.id
-  subnet_id = aws_subnet.private_subnet.id  
-}
+
 
 #Generating of SSH and HTTP Secuirty Group
 resource "aws_security_group" "http_access" {
